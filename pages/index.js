@@ -1,8 +1,17 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import NavBar from "../components/NavBar";
+import Todo from "../components/Todo";
+import { table, getRecords } from "../pages/api/utils/Airtable";
+import { TodosContext } from "../contexts/TodosContext";
+import { useEffect, useContext } from "react";
 
-export default function Home() {
+export default function Home({ initialTodos }) {
+  const { todos, setTodos } = useContext(TodosContext);
+
+  useEffect(() => {
+    setTodos(initialTodos);
+  }, []);
   return (
     <div className={styles.container}>
       <Head>
@@ -11,7 +20,10 @@ export default function Home() {
       </Head>
       <NavBar />
       <main className={styles.main}>
-        <p>Todo App</p>
+        <h2>Todo App</h2>
+        <ul>
+          {todos && todos.map((todo) => <Todo key={todo.id} todo={todo} />)}
+        </ul>
       </main>
 
       <footer className={styles.footer}>
@@ -26,4 +38,22 @@ export default function Home() {
       </footer>
     </div>
   );
+}
+
+export async function getServerSideProps(ctx) {
+  try {
+    const todos = await table.select({}).firstPage();
+    return {
+      props: {
+        initialTodos: getRecords(todos),
+      },
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      props: {
+        err: '"Opss.. something went wrong!',
+      },
+    };
+  }
 }
