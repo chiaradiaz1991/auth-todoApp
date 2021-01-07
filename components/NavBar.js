@@ -1,4 +1,5 @@
 import React from "react";
+// import styles from "../styles/global.css";
 
 export default function NavBar() {
   return <>

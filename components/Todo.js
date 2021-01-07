@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
 import { TodosContext } from "../contexts/TodosContext.js";
+import styles from "../styles/Todo.module.css";
+
 
 export default function Todo({ todo }) {
   const { updateTodo, deleteTodo } = useContext(TodosContext);
@@ -12,7 +14,7 @@ export default function Todo({ todo }) {
     updateTodo(updatedTodo);
   };
   return (
-    <li>
+    <li className={styles.todo}>
       <input
         type="checkbox"
         name="completed"
@@ -20,11 +22,7 @@ export default function Todo({ todo }) {
         checked={todo.fields.completed}
         onChange={handleCompleted}
       />
-      {/* <p className={todo.fields.completed ? 'checked' : 'notChecked'}>{todo.fields.description}</p> */}
-      <p>{todo.fields.description}</p>
-      <button type="type" onClick={(id) => handleDeleteTodo(id)}>
-        Delete
-      </button>
+      <p className={todo.fields.completed ? styles.checked : styles.notChecked}>{todo.fields.description}</p>
     </li>
   );
 }
